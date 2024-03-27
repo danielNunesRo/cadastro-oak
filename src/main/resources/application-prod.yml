@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/cadastro
+    password: 123
+    username: postgres
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
