@@ -3,19 +3,23 @@ package com.danielnunesro.cadastro.unittests.impl.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.danielnunesro.cadastro.entities.Cadastro;
@@ -24,6 +28,7 @@ import com.danielnunesro.cadastro.exception.ResourceNotFoundException;
 import com.danielnunesro.cadastro.repositories.CadastroRepository;
 import com.danielnunesro.cadastro.service.CadastroService;
 import com.danielnunesro.cadastro.vo.CadastroVO;
+import com.danielnunesro.cadastro.vo.ResponseVO;
 
 @SpringBootTest
 public class CadastroServiceTest {
@@ -34,36 +39,7 @@ public class CadastroServiceTest {
 	@Mock
 	private CadastroRepository cadastroRepository;
 	
-	@Test
-	public void testCreateWithEmptyOrNullFields() {
-		
-		CadastroVO cadastroVO = new CadastroVO(null, "", "Descrição do Produto A", null, true);
-		
-		assertThrows(RequiredObjectIsNullException.class, () -> {
-			cadastroService.create(cadastroVO);
-		});
-	}
 	
-	@Test
-	public void testCreate() {
-		CadastroVO cadastroVO = new CadastroVO(null, "Produto A", "Descrição do Produto A", 100.00, true);
-		
-		Mockito.when(cadastroRepository.save(Mockito.any(Cadastro.class))).thenAnswer(invocation -> {
-            Cadastro cadastro = invocation.getArgument(0);
-            cadastro.setId(1L); 
-            return cadastro;
-        });
-		
-		CadastroVO result = cadastroService.create(cadastroVO);
-        
-        assertNotNull(result);
-        
-        assertEquals(cadastroVO.getNameProduct(), result.getNameProduct());
-        assertEquals(cadastroVO.getDescription(), result.getDescription());
-        assertEquals(cadastroVO.getPrice(), result.getPrice());
-        assertEquals(cadastroVO.isDisponible(), result.isDisponible());
-		
-	}
 	
 	@Test
 	public void testFindAll() {

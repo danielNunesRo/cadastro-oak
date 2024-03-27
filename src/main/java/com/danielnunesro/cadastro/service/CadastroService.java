@@ -1,7 +1,6 @@
 package com.danielnunesro.cadastro.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import com.danielnunesro.cadastro.exception.RequiredObjectIsNullException;
 import com.danielnunesro.cadastro.exception.ResourceNotFoundException;
 import com.danielnunesro.cadastro.repositories.CadastroRepository;
 import com.danielnunesro.cadastro.vo.CadastroVO;
+import com.danielnunesro.cadastro.vo.ResponseVO;
 
 @Service
 public class CadastroService {
@@ -19,26 +19,25 @@ public class CadastroService {
 	@Autowired
 	private CadastroRepository repository;
 	
-	public CadastroVO create(CadastroVO cadastro) {
-		
-		if (cadastro.getNameProduct() == null || cadastro.getDescription() == null || cadastro.getPrice() == null
-				|| cadastro.getNameProduct().isEmpty() || cadastro.getDescription().isEmpty() || cadastro.getPrice().isNaN()) {
-			throw new RequiredObjectIsNullException("Todos os campos devem estar preenchidos!");
-		}
-		
-		var newCadastro = new Cadastro();
-		newCadastro.setId(cadastro.getId());
-		newCadastro.setNameProduct(cadastro.getNameProduct());
-		newCadastro.setDescription(cadastro.getDescription());
-		newCadastro.setPrice(cadastro.getPrice());
-		newCadastro.setDisponible(cadastro.isDisponible());
-		repository.save(newCadastro);
-		
-		CadastroVO cadastroVO = new CadastroVO(newCadastro);
-		
-		return cadastroVO;
-		
+	
+	public List<ResponseVO> creating(CadastroVO cadastro) {
+		if (cadastro == null || cadastro.getNameProduct() == null || cadastro.getNameProduct().isEmpty() || 
+		        cadastro.getDescription() == null || cadastro.getDescription().isEmpty() || 
+		        cadastro.getPrice() == null || cadastro.getPrice().isNaN()) {
+		        throw new RequiredObjectIsNullException("Todos os campos, exceto ID, devem ser preenchidos!");
+		    }
+
+		    Cadastro newCadastro = new Cadastro();
+		    newCadastro.setNameProduct(cadastro.getNameProduct());
+		    newCadastro.setDescription(cadastro.getDescription());
+		    newCadastro.setPrice(cadastro.getPrice());
+		    newCadastro.setDisponible(cadastro.isDisponible());
+
+		    repository.save(newCadastro);
+
+		    return repository.findAllNamesAndPricesOrderedByPrice();
 	}
+	
 	
 	public List<CadastroVO> findAll() {
 		List<Cadastro> cadastroList = repository.findAll();

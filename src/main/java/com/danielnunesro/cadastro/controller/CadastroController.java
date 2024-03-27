@@ -24,11 +24,11 @@ public class CadastroController {
 	@Autowired
 	private CadastroService cadastroService;
 	
-	@PostMapping("/create")
-    public ResponseEntity<CadastroVO> createCadastro(@RequestBody CadastroVO cadastroVO) {
-        CadastroVO createdCadastro = cadastroService.create(cadastroVO);
-        return new ResponseEntity<>(createdCadastro, HttpStatus.CREATED);
-    }
+	@PostMapping("/createv2")
+	public ResponseEntity<?> creating(@RequestBody CadastroVO cadastro) {
+		return new ResponseEntity<>(cadastroService.creating(cadastro), HttpStatus.CREATED);
+	}
+	
 	
 	@GetMapping("/allproducts")
     public ResponseEntity<List<CadastroVO>> getAllCadastros() {
